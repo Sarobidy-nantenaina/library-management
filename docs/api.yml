@@ -212,6 +212,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Author'
+  /authors/delete:
+    delete:
+      summary: Delete multiple authors
+      operationId: deleteMultipleAuthors
+      tags:
+        - Authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeleteAuthors'
+      responses:
+        200:
+          description: The authors have been deleted successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
 components:
   schemas:
     CrupdateBook:
@@ -252,6 +274,11 @@ components:
           type: string
         sex:
           $ref: '#/components/schemas/Sex'
+    DeleteAuthors:
+      type: object
+      properties:
+        authorId:
+          type: string
     Sex:
       type: string
       enum:
