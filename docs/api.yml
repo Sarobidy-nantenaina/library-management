@@ -5,9 +5,14 @@ info:
   description: STD21084
 servers:
   - url: https://library.com
+tags:
+  - Books
+  - Authors
 paths:
   /books:
     get:
+      tags:
+        - Books
       summary: Get all books
       description: The returned books are ordered by updated datetime.
       operationId: getBooks
@@ -19,19 +24,23 @@ paths:
           schema:
             type: string
         - in: query
-          name: releaseDateStart
-          description: Filter books by release date (start)
-          required: false
-          schema:
-              type: string
-              format: date
-        - in: query
-          name: releaseDateEnd
-          description: Filter books by release date (end)
-          required: false
+          name: releaseDateMin
+          description: |
+            If  `releaseDateMax` is not provided, `releaseDateMin` is ignored.
+            `releaseDateMin` can not be after `releaseDateMax`.
           schema:
             type: string
             format: date
+          required: false
+        - in: query
+          name: releaseDateMax
+          description: |
+            If  `releaseDateMin` is not provided, `releaseDateMax` is ignored.
+            `releaseDateMax` can not be after `releaseDateMin`.
+          schema:
+            type: string
+            format: date
+          required: false
       responses:
         200:
           description: The list of filtered books
@@ -42,6 +51,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Book'
     put:
+      tags:
+        - Books
       summary: Create or update a list of books
       operationId: crupdateBooks
       requestBody:
@@ -62,26 +73,33 @@ paths:
                   $ref: '#/components/schemas/Book'
   /authors:
     get:
-      summary: Get author filtered by name
-      description: The returned Author is ordered by name.
-      operationId: getAuthorByName
+      summary: Get all authors
+      operationId: getAuthors
+      tags:
+        - Authors
       parameters:
-        - in: query
-          name: authorName
-          description: return author filtered by name
-          required: false
+        - name: authorName
+          in: query
+          description: |
+            Filter returned authors by given name. 
+            If not provided, then list is not filtered.
           schema:
             type: string
+          required: false
       responses:
         200:
-          description: Author retrieved successfully
+          description: The list of filtered authors
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Author'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
     put:
-      summary: Create or update a list of authors
+      summary: Create or update authors
       operationId: crupdateAuthors
+      tags:
+        - Authors
       requestBody:
         content:
           application/json:
@@ -98,23 +116,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
-        404:
-          description: Author not found
+  /authors/{aId}:
     delete:
       summary: Delete an author
       operationId: deleteAuthor
+      tags:
+        - Authors
       parameters:
-        - in: query
-          name: id
+        - name: aId
+          in: path
+          description: Author identifier to be deleted
           schema:
             type: string
-          required: false
-          description: ID of the author to delete
+          required: true
       responses:
         200:
-          description: Author deleted successfully
-        404:
-          description: Author not found
+          description: The author deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
 components:
   schemas:
     Book:
@@ -142,10 +163,12 @@ components:
       properties:
         id:
           type: string
-        name:
+        authorName:
           type: string
         sex:
-          type: string
-          enum:
-            - M
-            - F
+          $ref: '#/components/schemas/Sex'
+    Sex:
+      type: string
+      enum:
+        - M
+        - F
