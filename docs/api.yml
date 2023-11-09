@@ -46,8 +46,18 @@ paths:
         - $ref: '#/components/parameters/queryPagination'
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
-
+          description: Successful response with Book
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CrupdateBook'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -68,7 +78,18 @@ paths:
                 $ref: '#/components/schemas/CrupdateBook'
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The list of created or updated books
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Book'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -96,7 +117,16 @@ paths:
             type: string
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The updated book with the edited author
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        $ref: '#/components/schemas/EditAuthorBook'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -118,7 +148,18 @@ paths:
                 $ref: '#/components/schemas/UpdateAuthorsBooks'
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: Return all authors updated from all books
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EditAuthorBook'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -147,9 +188,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Book'
+        400:
+          $ref: '#/components/schemas/BadRequestResponse'
+        403:
+          $ref: '#/components/schemas/ForbiddenResponse'
+        500:
+          $ref: '#/components/schemas/InternalServerErrorResponse'
   /authors/{pathPagination}:
     parameters:
       - name: pathPagination
@@ -170,13 +222,25 @@ paths:
           required: false
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The list of created or updated authors
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
           $ref: '#/components/schemas/ForbiddenResponse'
         500:
           $ref: '#/components/schemas/InternalServerErrorResponse'
+  /authors:
     put:
       summary: Create or update authors
       operationId: crupdateAuthors
@@ -191,7 +255,18 @@ paths:
                 $ref: '#/components/schemas/Author'
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The list of created or updated authors
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -213,7 +288,16 @@ paths:
           required: true
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The author deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -236,7 +320,18 @@ paths:
               type: string
       responses:
         200:
-          $ref: '#/components/schemas/SuccessfulResponse'
+          description: The authors have been deleted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -266,9 +361,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+                allOf:
+                  - $ref: '#/components/schemas/SuccessfulResponse'
+                  - type: object
+                    properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
