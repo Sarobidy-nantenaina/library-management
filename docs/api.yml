@@ -1,13 +1,15 @@
 openapi: 3.0.3
 info:
   title: Library API
-  version: 1.0.0
+  version: 1.3.0
   description: STD21084
 servers:
   - url: https://library.com
 tags:
-  - Books
-  - Authors
+  - name: Books
+    description: Operations related to books
+  - name: Authors
+    description: Operations related to authors
 paths:
   /books:
     get:
@@ -123,7 +125,35 @@ paths:
           $ref: '#/components/schemas/ForbiddenResponse'
         500:
           $ref: '#/components/schemas/InternalServerErrorResponse'
-  /authors/{page}/{pageSize}:
+  /books/import:
+    post:
+      tags:
+        - Books
+      summary: Import books from Excel or JSON
+      operationId: importBooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/BookImportJson'
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/BookImportExcel'
+      responses:
+        200:
+          description: List of imported books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /authors/{pathPagination}:
+    parameters:
+      - name: pathPagination
+        $ref: '#/components/parameters/pathPagination'
     get:
       summary: Get all authors
       operationId: getAuthors
@@ -138,7 +168,6 @@ paths:
           schema:
             type: string
           required: false
-        - $ref: '#/components/parameters/pathPagination'
       responses:
         200:
           $ref: '#/components/schemas/SuccessfulResponse'
@@ -197,16 +226,49 @@ paths:
       operationId: deleteMultipleAuthors
       tags:
         - Authors
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/DeleteAuthors'
+      parameters:
+        - in: query
+          name: authorIds
+          description: IDs of the authors to be deleted
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         200:
           $ref: '#/components/schemas/SuccessfulResponse'
+        400:
+          $ref: '#/components/schemas/BadRequestResponse'
+        403:
+          $ref: '#/components/schemas/ForbiddenResponse'
+        500:
+          $ref: '#/components/schemas/InternalServerErrorResponse'
+
+  /authors/import:
+    post:
+      tags:
+        - Authors
+      summary: Import authors from Excel or JSON
+      operationId: importAuthors
+      requestBody:
+        content:
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/AuthorImportExcel'
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/AuthorImportJson'
+      responses:
+        200:
+          description: List of imported authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/schemas/BadRequestResponse'
         403:
@@ -358,6 +420,63 @@ components:
                 error:
                   type: string
                   description: An unexpected condition was encountered on the server side and no specific error information is available at the moment.
+    BookImportJson:
+      type: object
+      properties:
+        bookName:
+          type: string
+        author:
+          type: string
+        pageNumbers:
+          type: integer
+        topic:
+          type: string
+          enum:
+            - ROMANCE
+            - COMEDY
+            - OTHER
+        releaseDate:
+          type: string
+          format: date
+        idAuthor:
+          type: string
+
+    BookImportExcel:
+      type: object
+      properties:
+        bookName:
+          type: string
+        author:
+          type: string
+        pageNumbers:
+          type: integer
+        topic:
+          type: string
+          enum:
+            - ROMANCE
+            - COMEDY
+            - OTHER
+        releaseDate:
+          type: string
+          format: date
+        idAuthor:
+          type: string
+
+    AuthorImportJson:
+      type: object
+      properties:
+        authorName:
+          type: string
+        sex:
+          $ref: '#/components/schemas/Sex'
+
+    AuthorImportExcel:
+      type: object
+      properties:
+        authorName:
+          type: string
+        sex:
+          $ref: '#/components/schemas/Sex'
   parameters:
     queryPagination:
       name: queryPagination
@@ -375,7 +494,7 @@ components:
     pathPagination:
       name: pathPagination
       in: path
-      required: false
+      required: true
       schema:
         type: object
         properties:
