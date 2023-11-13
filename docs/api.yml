@@ -43,27 +43,17 @@ paths:
             type: string
             format: date
           required: false
-        - $ref: '#/components/parameters/queryPagination'
+        - $ref: '#/components/parameters/queryPage'
+        - $ref: '#/components/parameters/queryPageSize'
       responses:
         200:
-          description: Successful response with Book
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/CrupdateBook'
+          $ref: '#/components/responses/responseBooks_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
     put:
       tags:
         - Books
@@ -78,24 +68,13 @@ paths:
                 $ref: '#/components/schemas/CrupdateBook'
       responses:
         200:
-          description: The list of created or updated books
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Book'
+          $ref: '#/components/responses/responseBooks_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /books/{bookId}/authors/{authorId}:
     put:
       tags:
@@ -117,22 +96,13 @@ paths:
             type: string
       responses:
         200:
-          description: The updated book with the edited author
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        $ref: '#/components/schemas/EditAuthorBook'
+          $ref: '#/components/responses/responseBook_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /books/authors:
     put:
       tags:
@@ -148,24 +118,13 @@ paths:
                 $ref: '#/components/schemas/UpdateAuthorsBooks'
       responses:
         200:
-          description: Return all authors updated from all books
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/EditAuthorBook'
+          $ref: '#/components/responses/responseBooks_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /books/import:
     post:
       tags:
@@ -202,10 +161,10 @@ paths:
           $ref: '#/components/schemas/ForbiddenResponse'
         500:
           $ref: '#/components/schemas/InternalServerErrorResponse'
-  /authors/{pathPagination}:
+  /authors/page/{pathPage}/pageSize/{pathPageSize}:
     parameters:
-      - name: pathPagination
-        $ref: '#/components/parameters/pathPagination'
+      - $ref: '#/components/parameters/pathPage'
+      - $ref: '#/components/parameters/pathPageSize'
     get:
       summary: Get all authors
       operationId: getAuthors
@@ -333,11 +292,11 @@ paths:
                         items:
                           $ref: '#/components/schemas/Author'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
 
   /authors/import:
     post:
@@ -432,94 +391,6 @@ components:
           type: string
         authorId:
           type: string
-    Response:
-      type: object
-      properties:
-        status:
-          type: object
-          properties:
-            code:
-              type: integer
-            message:
-              type: string
-        body:
-          type: object
-    SuccessfulResponse:
-      allOf:
-        - $ref: '#/components/schemas/Response'
-        - type: object
-          properties:
-            status:
-              properties:
-                code:
-                  type: integer
-                  enum: [ 200 ]
-                message:
-                  type: string
-                  default: "Success"
-            body:
-              type: object
-              properties:
-                success:
-                  type: string
-                  description: Action Successfully
-    BadRequestResponse:
-      allOf:
-        - $ref: '#/components/schemas/Response'
-        - type: object
-          properties:
-            status:
-              properties:
-                code:
-                  type: integer
-                  enum: [ 400 ]
-                message:
-                  type: string
-                  default: "Bad Request"
-            body:
-              type: object
-              properties:
-                error:
-                  type: string
-                  description: The server cannot understand the request due to incorrect syntax or malformed data.
-    ForbiddenResponse:
-      allOf:
-        - $ref: '#/components/schemas/Response'
-        - type: object
-          properties:
-            status:
-              properties:
-                code:
-                  type: integer
-                  enum: [ 403 ]
-                message:
-                  type: string
-                  default: "Forbidden"
-            body:
-              type: object
-              properties:
-                error:
-                  type: string
-                  description: Unauthorized access to the resource due to insufficient permissions.
-    InternalServerErrorResponse:
-      allOf:
-        - $ref: '#/components/schemas/Response'
-        - type: object
-          properties:
-            status:
-              properties:
-                code:
-                  type: integer
-                  enum: [ 500 ]
-                message:
-                  type: string
-                  default: "Internal Server Error"
-            body:
-              type: object
-              properties:
-                error:
-                  type: string
-                  description: An unexpected condition was encountered on the server side and no specific error information is available at the moment.
     BookImportJson:
       type: object
       properties:
@@ -577,33 +448,149 @@ components:
           type: string
         sex:
           $ref: '#/components/schemas/Sex'
+    StatusResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: OK
+    TemplateResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusResponse'
+        body:
+          type: object
+    BookListBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+        - properties:
+            body:
+              type: array
+              items:
+                $ref: '#/components/schemas/Book'
+    SingleBookBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+        - properties:
+            body:
+              $ref: '#/components/schemas/EditAuthorBook'
+    BadRequestBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+      example:
+        status:
+          code: 400
+          message: BAD REQUEST
+        body: {}
+    ForbiddenBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+      example:
+        status:
+          code: 403
+          message: FORBIDDEN
+        body: { }
+    ServerErrorBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+      example:
+        status:
+          code: 500
+          message: INTERNAL SERVER ERROR
+        body: { }
+  responses:
+    responseBooks_200:
+      description: List of books
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookListBody'
+    responseBook_200:
+      description: The updated book with the edited author
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SingleBookBody'
+    response_400:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestBody'
+    response_403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenBody'
+    response_500:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerErrorBody'
+
   parameters:
-    queryPagination:
-      name: queryPagination
+#    2eme facon de faire la pagination
+#    queryPagination:
+#      name: queryPagination
+#      in: query
+#      required: false
+#      schema:
+#        type: object
+#        properties:
+#          page:
+#            type: integer
+#            default: 1
+#          pageSize:
+#            type: integer
+#            default: 50
+#    pathPagination:
+#      name: pathPagination
+#      in: path
+#      required: true
+#      schema:
+#        type: object
+#        properties:
+#          page:
+#            type: integer
+#            default: 1
+#          pageSize:
+#            type: integer
+#            default: 50
+#   1ere facon de faire la pagination
+    queryPage:
       in: query
+      name: queryPage
       required: false
       schema:
-        type: object
-        properties:
-          page:
-            type: integer
-            default: 1
-          pageSize:
-            type: integer
-            default: 50
-    pathPagination:
-      name: pathPagination
-      in: path
+        type: integer
+        default: 1
+    queryPageSize:
+      in: query
+      name: queryPageSize
       required: true
       schema:
-        type: object
-        properties:
-          page:
-            type: integer
-            default: 1
-          pageSize:
-            type: integer
-            default: 50
+        type: integer
+        default: 50
+    pathPage:
+      in: path
+      name: queryPage
+      required: true
+      schema:
+        type: integer
+        default: 1
+    pathPageSize:
+      in: path
+      name: queryPageSize
+      required: false
+      schema:
+        type: integer
+        default: 50
 
 
 
