@@ -181,24 +181,13 @@ paths:
           required: false
       responses:
         200:
-          description: The list of created or updated authors
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/responseAuthors_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /authors:
     put:
       summary: Create or update authors
@@ -214,24 +203,13 @@ paths:
                 $ref: '#/components/schemas/Author'
       responses:
         200:
-          description: The list of created or updated authors
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/responseAuthors_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /authors/{aId}:
     delete:
       summary: Delete an author
@@ -247,22 +225,13 @@ paths:
           required: true
       responses:
         200:
-          description: The author deleted
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/responseAuthor_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /authors/delete:
     delete:
       summary: Delete multiple authors
@@ -279,18 +248,7 @@ paths:
               type: string
       responses:
         200:
-          description: The authors have been deleted successfully
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/responseAuthors_200'
         400:
           $ref: '#/components/responses/response_400'
         403:
@@ -478,6 +436,20 @@ components:
         - properties:
             body:
               $ref: '#/components/schemas/EditAuthorBook'
+    AuthorListBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+        - properties:
+            body:
+              type: array
+              items:
+                $ref: '#/components/schemas/Author'
+    SingleAuthorBody:
+      allOf:
+        - $ref: '#/components/schemas/TemplateResponse'
+        - properties:
+            body:
+              $ref: '#/components/schemas/Author'
     BadRequestBody:
       allOf:
         - $ref: '#/components/schemas/TemplateResponse'
@@ -515,6 +487,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SingleBookBody'
+    responseAuthors_200:
+      description: List of authors
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthorListBody'
+    responseAuthor_200:
+      description: an author
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SingleAuthorBody'
+
     response_400:
       description: Bad Request
       content:
