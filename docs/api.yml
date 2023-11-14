@@ -386,6 +386,39 @@ paths:
           $ref: '#/components/responses/response_403'
         '500':
           $ref: '#/components/responses/response_500'
+  /visitors/{visitorId}/activities:
+    get:
+      tags:
+        - Visitors
+      summary: Get Visitor Activities
+      description: Retrieves the activities of a visitor over a specified period.
+      operationId: getVisitorActivities
+      parameters:
+        - in: path
+          name: visitorId
+          required: true
+          description: ID of the visitor to retrieve activities for.
+          schema:
+            type: string
+        - in: query
+          name: period
+          required: true
+          description: The period for which to retrieve activities (e.g., 1 month, 1 week, specific hour interval).
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Visitor activities retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorActivitiesResponse'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
 
 components:
   schemas:
@@ -423,6 +456,28 @@ components:
     ReturnBookResponse:
       allOf:
         - $ref: '#/components/schemas/BorrowResponse'
+    VisitorActivitiesResponse:
+      type: object
+      properties:
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+    Activity:
+      type: object
+      properties:
+        activityId:
+          type: string
+        bookId:
+          type: string
+        action:
+          type: string
+          enum:
+            - BORROWED
+            - RETURNED
+        date_time:
+          type: string
+          format: date-time
 
     CrupdateBook:
       type: object
