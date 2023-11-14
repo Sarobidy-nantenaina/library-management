@@ -20,6 +20,8 @@ paths:
       summary: Get all books
       description: The returned books are ordered by updated datetime.
       operationId: getBooks
+      security:
+        - public: [ ]
       parameters:
         - in: query
           name: bookName
@@ -61,6 +63,8 @@ paths:
         - Books
       summary: Create or update a list of books
       operationId: crupdateBooks
+      security:
+        - admin: [ ]
       requestBody:
         content:
           application/json:
@@ -83,6 +87,8 @@ paths:
         - Books
       summary: Edit a specific Author for a Book
       operationId: CrupdateAuthorForBook
+      security:
+        - admin: [ ]
       parameters:
         - in: path
           name: bookId
@@ -111,6 +117,8 @@ paths:
         - Books
       summary: update all authors from all books
       operationId: UpdateAuthorsFromBooks
+      security:
+        - admin: [ ]
       requestBody:
         content:
           application/json:
@@ -134,6 +142,11 @@ paths:
       summary: Get Borrowed Books
       description: Retrieves the list of borrowed books.
       operationId: getBorrowedBooks
+      security:
+        - admin: [ ]
+      parameters:
+        - $ref: '#/components/parameters/queryPage'
+        - $ref: '#/components/parameters/queryPageSize'
       responses:
         '200':
           description: List of borrowed books retrieved successfully.
@@ -154,6 +167,11 @@ paths:
       summary: Get Available Books
       description: Retrieves the list of available books.
       operationId: getAvailableBooks
+      security:
+        - admin: [ ]
+      parameters:
+        - $ref: '#/components/parameters/queryPage'
+        - $ref: '#/components/parameters/queryPageSize'
       responses:
         '200':
           description: List of available books retrieved successfully.
@@ -173,6 +191,8 @@ paths:
         - Books
       summary: Import books from Excel or JSON
       operationId: importBooks
+      security:
+        - admin: [ ]
       requestBody:
         content:
           application/json:
@@ -210,6 +230,8 @@ paths:
     get:
       summary: Get all authors
       operationId: getAuthors
+      security:
+        - public: [ ]
       tags:
         - Authors
       parameters:
@@ -234,6 +256,8 @@ paths:
     put:
       summary: Create or update authors
       operationId: crupdateAuthors
+      security:
+        - admin: [ ]
       tags:
         - Authors
       requestBody:
@@ -256,6 +280,8 @@ paths:
     delete:
       summary: Delete an author
       operationId: deleteAuthor
+      security:
+        - admin: [ ]
       tags:
         - Authors
       parameters:
@@ -278,6 +304,8 @@ paths:
     delete:
       summary: Delete multiple authors
       operationId: deleteMultipleAuthors
+      security:
+        - admin: [ ]
       tags:
         - Authors
       parameters:
@@ -304,6 +332,8 @@ paths:
         - Authors
       summary: Import authors from Excel or JSON
       operationId: importAuthors
+      security:
+        - admin: [ ]
       requestBody:
         content:
           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
@@ -471,6 +501,8 @@ paths:
       summary: Borrow a Book
       description: Allows a visitor to borrow a book.
       operationId: borrowBook
+      security:
+        - admin: [ ]
       parameters:
         - in: path
           name: visitorId
@@ -504,6 +536,8 @@ paths:
       summary: Return a Book
       description: Allows a visitor to return a borrowed book.
       operationId: returnBook
+      security:
+        - admin: [ ]
       parameters:
         - in: path
           name: visitorId
@@ -836,6 +870,26 @@ components:
           code: 500
           message: INTERNAL SERVER ERROR
         body: { }
+
+  securitySchemes:
+      public:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl: https://example.com/oauth/authorize
+            tokenUrl: https://example.com/oauth/token
+            scopes:
+              read: Allows reading information
+      admin:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl: https://example.com/oauth/authorize
+            tokenUrl: https://example.com/oauth/token
+            scopes:
+              read: Allows reading information
+              write: Allows writing/modifying information
+              admin: Allows administrative actions
   responses:
     responseBooks_200:
       description: List of books
