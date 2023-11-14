@@ -205,28 +205,15 @@ paths:
                 - $ref: '#/components/schemas/BookImportExcel'
       responses:
         200:
-          description: List of imported books
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Book'
+          $ref: '#/components/responses/responseBooks_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
+
   /authors/page/{pathPage}/pageSize/{pathPageSize}:
-    parameters:
-      - $ref: '#/components/parameters/pathPage'
-      - $ref: '#/components/parameters/pathPageSize'
     get:
       summary: Get all authors
       operationId: getAuthors
@@ -243,6 +230,8 @@ paths:
           schema:
             type: string
           required: false
+        - $ref: '#/components/parameters/pathPage'
+        - $ref: '#/components/parameters/pathPageSize'
       responses:
         200:
           $ref: '#/components/responses/responseAuthors_200'
@@ -346,24 +335,13 @@ paths:
                 - $ref: '#/components/schemas/AuthorImportJson'
       responses:
         200:
-          description: List of imported authors
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessfulResponse'
-                  - type: object
-                    properties:
-                      body:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/responseAuthors_200'
         400:
-          $ref: '#/components/schemas/BadRequestResponse'
+          $ref: '#/components/responses/response_400'
         403:
-          $ref: '#/components/schemas/ForbiddenResponse'
+          $ref: '#/components/responses/response_403'
         500:
-          $ref: '#/components/schemas/InternalServerErrorResponse'
+          $ref: '#/components/responses/response_500'
   /visitors:
     post:
       tags:
@@ -872,24 +850,24 @@ components:
         body: { }
 
   securitySchemes:
-      public:
-        type: oauth2
-        flows:
-          authorizationCode:
-            authorizationUrl: https://example.com/oauth/authorize
-            tokenUrl: https://example.com/oauth/token
-            scopes:
-              read: Allows reading information
-      admin:
-        type: oauth2
-        flows:
-          authorizationCode:
-            authorizationUrl: https://example.com/oauth/authorize
-            tokenUrl: https://example.com/oauth/token
-            scopes:
-              read: Allows reading information
-              write: Allows writing/modifying information
-              admin: Allows administrative actions
+    public:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read: Allows reading information
+    admin:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read: Allows reading information
+            write: Allows writing/modifying information
+            admin: Allows administrative actions
   responses:
     responseBooks_200:
       description: List of books
@@ -936,34 +914,34 @@ components:
             $ref: '#/components/schemas/ServerErrorBody'
 
   parameters:
-#    2eme facon de faire la pagination
-#    queryPagination:
-#      name: queryPagination
-#      in: query
-#      required: false
-#      schema:
-#        type: object
-#        properties:
-#          page:
-#            type: integer
-#            default: 1
-#          pageSize:
-#            type: integer
-#            default: 50
-#    pathPagination:
-#      name: pathPagination
-#      in: path
-#      required: true
-#      schema:
-#        type: object
-#        properties:
-#          page:
-#            type: integer
-#            default: 1
-#          pageSize:
-#            type: integer
-#            default: 50
-#   1ere facon de faire la pagination
+    #    2eme facon de faire la pagination
+    #    queryPagination:
+    #      name: queryPagination
+    #      in: query
+    #      required: false
+    #      schema:
+    #        type: object
+    #        properties:
+    #          page:
+    #            type: integer
+    #            default: 1
+    #          pageSize:
+    #            type: integer
+    #            default: 50
+    #    pathPagination:
+    #      name: pathPagination
+    #      in: path
+    #      required: true
+    #      schema:
+    #        type: object
+    #        properties:
+    #          page:
+    #            type: integer
+    #            default: 1
+    #          pageSize:
+    #            type: integer
+    #            default: 50
+    #   1ere facon de faire la pagination
     queryPage:
       in: query
       name: queryPage
