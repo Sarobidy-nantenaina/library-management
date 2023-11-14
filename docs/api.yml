@@ -379,6 +379,33 @@ paths:
           $ref: '#/components/responses/response_403'
         '500':
           $ref: '#/components/responses/response_500'
+  /visitors/{visitorId}:
+    get:
+      tags:
+        - Visitors
+      summary: Get Visitor by ID
+      description: Retrieves a visitor by their ID.
+      operationId: getVisitorById
+      parameters:
+        - in: path
+          name: visitorId
+          required: true
+          description: ID of the visitor to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Visitor retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleVisitorResponse'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
   /visitors/{visitorId}/borrow:
     post:
       tags:
@@ -504,6 +531,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Visitor'
+    SingleVisitorResponse:
+      type: object
+      properties:
+        visitor:
+          $ref: '#/components/schemas/Visitor'
     BorrowBookRequest:
       type: object
       properties:
