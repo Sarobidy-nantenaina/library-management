@@ -10,6 +10,8 @@ tags:
     description: Operations related to books
   - name: Authors
     description: Operations related to authors
+  - name: Visitors
+    description: Operations related to visitors
 paths:
   /books:
     get:
@@ -292,8 +294,51 @@ paths:
           $ref: '#/components/schemas/ForbiddenResponse'
         500:
           $ref: '#/components/schemas/InternalServerErrorResponse'
+  /visitors:
+    post:
+      tags:
+        - Visitors
+      summary: Add a Visitor
+      description: Adds a new visitor to the library.
+      operationId: addVisitor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVisitor'
+      responses:
+        '200':
+          description: Visitor added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visitor'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
+
 components:
   schemas:
+    CreateVisitor:
+      type: object
+      properties:
+        name:
+          type: string
+        reference:
+          type: string
+    Visitor:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        reference:
+          type: string
     CrupdateBook:
       type: object
       properties:
