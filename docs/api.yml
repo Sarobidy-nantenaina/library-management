@@ -360,6 +360,25 @@ paths:
           $ref: '#/components/responses/response_403'
         '500':
           $ref: '#/components/responses/response_500'
+    get:
+      tags:
+        - Visitors
+      summary: Get All Visitors
+      description: Retrieves the list of all visitors.
+      operationId: getAllVisitors
+      responses:
+        '200':
+          description: List of visitors retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorsListResponse'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
   /visitors/{visitorId}/borrow:
     post:
       tags:
@@ -478,6 +497,13 @@ components:
           type: string
         reference:
           type: string
+    VisitorsListResponse:
+      type: object
+      properties:
+        visitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Visitor'
     BorrowBookRequest:
       type: object
       properties:
