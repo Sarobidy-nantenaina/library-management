@@ -127,6 +127,27 @@ paths:
           $ref: '#/components/responses/response_403'
         500:
           $ref: '#/components/responses/response_500'
+  /books/borrowed:
+    get:
+      tags:
+        - Books
+      summary: Get Borrowed Books
+      description: Retrieves the list of borrowed books.
+      operationId: getBorrowedBooks
+      responses:
+        '200':
+          description: List of borrowed books retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedBooksResponse'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
+
   /books/import:
     post:
       tags:
@@ -508,6 +529,13 @@ components:
           properties:
             author:
               $ref: '#/components/schemas/Author'
+    BorrowedBooksResponse:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
     Author:
       type: object
       properties:
