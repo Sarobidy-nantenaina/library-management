@@ -406,6 +406,38 @@ paths:
           $ref: '#/components/responses/response_403'
         '500':
           $ref: '#/components/responses/response_500'
+    put:
+      tags:
+        - Visitors
+      summary: Update Visitor
+      description: Updates a visitor by their ID.
+      operationId: updateVisitor
+      parameters:
+        - in: path
+          name: visitorId
+          required: true
+          description: ID of the visitor to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVisitorRequest'
+      responses:
+        '200':
+          description: Visitor updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleVisitorResponse'
+        '400':
+          $ref: '#/components/responses/response_400'
+        '403':
+          $ref: '#/components/responses/response_403'
+        '500':
+          $ref: '#/components/responses/response_500'
   /visitors/{visitorId}/borrow:
     post:
       tags:
@@ -531,6 +563,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Visitor'
+    UpdateVisitorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        reference:
+          type: string
     SingleVisitorResponse:
       type: object
       properties:
